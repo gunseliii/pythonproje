@@ -1,0 +1,31 @@
+# 📘 Final Project Report
+
+## 🔍 Introduction
+This project is a Python-based Word Guessing Game designed with Object-Oriented Programming and a simple GUI using Tkinter. The objective is to guess a hidden word by entering letters. This game offers a friendly interface and is accessible for users with no advanced technical background.
+
+## 🛠 Technologies Used
+- Python 3
+- Tkinter
+- Visual Studio Code
+- Git & GitHub
+
+## 🧠 Implementation Details
+- A WordGame class handles the game logic (word selection, guessing, checking win/lose).
+- A WordGameGUI class manages the graphical user interface with Tkinter.
+- Game state updates dynamically with each guess.
+- Restart button resets the game state.
+
+## 🚧 Challenges & Solutions
+- Basic Tkinter GUI was too plain → Solution: added colorful labels, larger fonts, themed background and buttons.
+- Game over logic was not displaying messages → used messagebox to show results clearly.
+
+## ✅ Conclusion & Future Work
+We successfully created an interactive and colorful game using Python OOP and GUI libraries. In the future, we could add:
+- Score tracking
+- Word categories
+- Sound effects
+- Animation transitions
+
+## 👩‍💻 Team
+- Fadime Şevval GÜNİ
+- Günseli ÇALLI
