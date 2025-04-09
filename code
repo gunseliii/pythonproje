@@ -1,0 +1,101 @@
+# Source: Developed with assistance from ChatGPT, GUI style inspiration from Real Python
+
+import tkinter as tk  # GUI module
+from tkinter import messagebox  # Used for displaying end-of-game alerts
+import random  # For random word selection
+
+# Class containing game logic
+class WordGame:
+    def __init__(self, words):
+        self.words = words
+        self.reset_game()
+
+    def reset_game(self):
+        self.word = random.choice(self.words)  # Randomly select a word
+        self.guessed = ['_' for _ in self.word]  # Underscore for each letter in the word
+        self.lives = 6  # Player starts with 6 lives
+        self.guesses = []  # Store guessed letters
+
+    def guess_letter(self, letter):
+        if letter in self.guesses:  # Skip if letter was already guessed
+            return
+        self.guesses.append(letter)  # Add letter to guesses
+        if letter in self.word:  # If correct, reveal the letter in its position(s)
+            for i, char in enumerate(self.word):
+                if char == letter:
+                    self.guessed[i] = letter
+        else:
+            self.lives -= 1  # Wrong guess reduces a life
+
+    def is_game_over(self):  # Check if game is over
+        return self.lives == 0 or '_' not in self.guessed
+
+    def is_winner(self):  # Check if player has guessed the whole word
+        return '_' not in self.guessed
+
+# GUI class for the word game
+class WordGameGUI:
+    def __init__(self, master, game):
+        self.master = master
+        self.game = game
+
+        # Window title and background color
+        self.master.title("🎉 Word Guessing Game 🎉")
+        self.master.configure(bg="#f0f8ff")
+
+        # Game header label
+        self.title_label = tk.Label(master, text="🔤 Guess the Word!", font=("Comic Sans MS", 24, "bold"), bg="#f0f8ff", fg="#2c3e50")
+        self.title_label.pack(pady=10)
+
+        # Label showing the hidden word
+        self.word_label = tk.Label(master, text=' '.join(self.game.guessed), font=("Courier", 28), bg="#f0f8ff", fg="#1abc9c")
+        self.word_label.pack(pady=10)
+
+        # Label showing remaining lives
+        self.lives_label = tk.Label(master, text=f"Lives left: {self.game.lives}", font=("Arial", 16), bg="#f0f8ff", fg="#e74c3c")
+        self.lives_label.pack()
+
+        # Input field for letter guesses
+        self.entry = tk.Entry(master, font=("Arial", 14), width=5, justify='center')
+        self.entry.pack(pady=5)
+
+        # Guess button
+        self.guess_button = tk.Button(master, text="Guess", command=self.make_guess, bg="#3498db", fg="white", font=("Arial", 12, "bold"))
+        self.guess_button.pack(pady=5)
+
+        # Play again button
+        self.reset_button = tk.Button(master, text="Play Again", command=self.reset_game, bg="#9b59b6", fg="white", font=("Arial", 12, "bold"))
+        self.reset_button.pack(pady=5)
+
+    def make_guess(self):
+        letter = self.entry.get().lower()  # Convert input to lowercase
+        self.entry.delete(0, tk.END)  # Clear the input field
+        if letter and letter.isalpha() and len(letter) == 1:  # Ensure valid input
+            self.game.guess_letter(letter)
+            self.word_label.config(text=' '.join(self.game.guessed))
+            self.lives_label.config(text=f"Lives left: {self.game.lives}")
+            if self.game.is_game_over():
+                if self.game.is_winner():
+                    messagebox.showinfo("🎉 You Won!", f"Congrats! The word was: {self.game.word}")
+                else:
+                    messagebox.showerror("💀 Game Over", f"You lost! The word was: {self.game.word}")
+                self.disable_inputs()
+
+    def disable_inputs(self):  # Disable input field and guess button
+        self.guess_button.config(state='disabled')
+        self.entry.config(state='disabled')
+
+    def reset_game(self):  # Reset the game for a new round
+        self.game.reset_game()
+        self.word_label.config(text=' '.join(self.game.guessed))
+        self.lives_label.config(text=f"Lives left: {self.game.lives}")
+        self.guess_button.config(state='normal')
+        self.entry.config(state='normal')
+
+# Entry point of the program
+if __name__ == "__main__":
+    words = ['python', 'developer', 'computer', 'coding', 'interface', 'game']  # Sample words
+    game = WordGame(words)
+    root = tk.Tk()
+    gui = WordGameGUI(root, game)
+    root.mainloop()
